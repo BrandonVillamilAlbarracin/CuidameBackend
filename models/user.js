@@ -9,7 +9,6 @@ const transporter = require("../config/mailer");
 var handlebars = require("handlebars");
 var fs = require("fs");
 
-
 User.changePassword = (data) => {
   const sql = `
   UPDATE
@@ -19,11 +18,8 @@ User.changePassword = (data) => {
   WHERE
       id = $1
 `;
-return db.none(sql, [
-  data.id,
-  data.password,
-]);
-}
+  return db.none(sql, [data.id, data.password]);
+};
 
 User.getUserById = (id) => {
   const sql = `
@@ -237,8 +233,7 @@ User.findByEmail = (email) => {
         phone,
         email,
         password,
-        verificado,
-        service
+        verificado
     FROM
         users
     WHERE
@@ -374,6 +369,59 @@ User.createForm1 = (user) => {
     new Date(),
     new Date(),
   ]);
+};
+
+User.getAllPersons = (id) => {
+  const sql = `
+  SELECT c.agreement, p.code, p.nombre, p.photourl
+  FROM codes c
+  JOIN pacientes p ON c.hashcode = p.code
+  WHERE p.a_cargo_id = $1;`;
+
+  return db.manyOrNone(sql, id);
+};
+
+User.savePhotoUrl = (data) => {
+  const sql = `UPDATE pacientes SET photourl = $2
+  WHERE id = $1;
+  `;
+  return db.oneOrNone(sql, [data.id, data.photoUrl]);
+};
+
+User.findPacientById = (id) => {
+  const sql = `
+    SELECT 
+        id,
+        photourl
+    FROM
+        pacientes
+    WHERE
+        id = $1
+    `;
+  return db.oneOrNone(sql, id);
+};
+
+User.personByHashcode = (id) => {
+  const sql = `
+    SELECT
+		*
+    FROM 
+        pacientes 
+    WHERE 
+        code = $1
+        `;
+
+  return db.oneOrNone(sql, id);
+};
+
+User.getOneQr = () => {
+  const sql = `SELECT c.hashcode
+  FROM codes c
+  LEFT JOIN pacientes m ON c.hashcode = m.code
+  WHERE m.code IS NULL and c.license = 'Health' and c.agreement IS NULL
+  LIMIT 1;
+  `;
+  return db.oneOrNone(sql);
 };
 
 User.createFormEnfermedad = (idPaciente, enfermedad) => {
@@ -643,6 +691,7 @@ User.findByCod = (cod) => {
         arl,
         seguro_funerario as "Seguro funerario",
         parentesco,
+        photourl,
         c.nombre1 as "Nombre del Contacto",
 		c.telefono1 as "Teléfono del Contacto"
     FROM 

@@ -17,6 +17,20 @@ function compareSync(password, hash) {
   return hash === verifyHash;
 }
 
+async function getAllPersons(req, res, next) {
+  try {
+    const id = req.body.id;
+    const persons = await User.getAllPersons(id);
+
+    return res.status(201).json(persons);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error al traer todas las personas",
+    });
+  }
+}
+
 async function updatePassword(req, res, next) {
   const { id, password, newPassword } = req.body;
   try {
@@ -175,6 +189,52 @@ async function uploadPetImg(req) {
   };
 }
 
+async function uploadPersonImg(req, res) {
+  try {
+    const id = req.body.id;
+    const data = {
+      id: req.body.id,
+    };
+    const file = req.file;
+    const pacient = await User.findPacientById(id);
+
+    if (file) {
+      data.photoUrl = file.path;
+    } else {
+      data.photoUrl = pacient.photourl;
+    }
+
+    if (pacient) {
+      if (file){
+        if (pacient.photourl !== data.photoUrl) {
+          try {
+            await fs.unlink(pacient.photourl);
+          } catch (error) {
+            console.error("Error al eliminar la imagen anterior:", error);
+          }
+        }
+      }
+      await User.savePhotoUrl(data);
+
+      return res.status(200).json({
+        success: true,
+        message: "Imagen cargada.",
+      });
+    } else {
+      return res.status(404).json({
+        success: true,
+        message: "Error al cargar imagen.",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({
+      success: true,
+      message: "Error al cargar la imagen.",
+    });
+  }
+}
+
 async function createOrUpdatePet(req, res, next) {
   try {
     const petinfo = req.body;
@@ -200,8 +260,8 @@ async function createOrUpdatePet(req, res, next) {
         petinfo.photourl = imageFile.path;
         petinfo.photoname = imageFile.filename;
 
-        console.log("saved image", savedPet.photourl);
-        console.log("New image", petinfo.photourl);
+        // console.log("saved image", savedPet.photourl);
+        // console.log("New image", petinfo.photourl);
 
         if (savedPet.photourl !== petinfo.photoUrl) {
           try {
@@ -236,6 +296,8 @@ module.exports = {
   getPetnUser,
   getOneUser,
   updateUser,
+  getAllPersons,
+  uploadPersonImg,
 
   async forgotPassword(req, res) {
     try {
@@ -505,10 +567,30 @@ module.exports = {
   async registerForm(req, res, next) {
     try {
       const Info = req.body;
-      const form = Info.form;
+      const form = Number(Info.form);
 
       if (form == 1) {
+        const { hashcode } = await User.getOneQr();
+
+        if (Info.code === "" || Info.code == null) Info.code = hashcode;
+
+        // console.log(Info);
+
+        if (Info.hashcode == "") {
+          return res.status(501).json({
+            success: false,
+            message: "No hay licencias para la persona.",
+          });
+        }
         console.log("Form 1:", Info);
+
+        const exists = await User.personByHashcode(Info.code);
+        if (exists) {
+          return res.status(501).json({
+            success: false,
+            message: "Parece que existe otra persona con un código idéntico.",
+          });
+        }
         const data = await User.createForm1(Info);
 
         return res.status(201).json({
@@ -517,7 +599,7 @@ module.exports = {
           data: data.id,
         });
       } else if (form == 2) {
-        console.log("Form 2:", Info);
+        // console.log("Form 2:", Info);
         for (const i in Info.enfermedades) {
           await User.createFormEnfermedad(
             Info.idPaciente,
@@ -533,8 +615,7 @@ module.exports = {
             "El formulario 2 (condicion) y la enfermedad se realizó correctamente.",
         });
       } else if (form == 3) {
-        console.log("Form 3:", Info);
-
+        // console.log("Form 3:", Info);
         const antecedentes = Info.antecedentes;
         antecedentes.forEach(async (element) => {
           await User.createForm3({
@@ -547,8 +628,7 @@ module.exports = {
           message: "El formulario 3 (antecedentes) se realizó correctamente.",
         });
       } else if (form == 6) {
-        console.log("Form 6:", Info);
-
+        // console.log("Form 6:", Info);
         const antecedentesF = Info.antecedentesF;
         antecedentesF.forEach(async (element) => {
           await User.createForm6({
@@ -562,7 +642,7 @@ module.exports = {
             "El formulario 6 (antecedentes fam) se realizó correctamente.",
         });
       } else if (form == 4) {
-        console.log("Form 4:", Info);
+        // console.log("Form 4:", Info);
 
         const medicamentos = Info.medicamentos;
         medicamentos.forEach(async (element) => {
@@ -576,8 +656,7 @@ module.exports = {
           message: "El formulario 4 (medicamentos) se realizó correctamente.",
         });
       } else if (form == 5) {
-        console.log("Form 5:", Info);
-
+        // console.log("Form 5:", Info);
         const alergias = Info.alergias;
         alergias.forEach(async (element) => {
           await User.createForm5({
@@ -591,8 +670,7 @@ module.exports = {
           message: "El formulario 5 (alergias) se realizó correctamente.",
         });
       } else if (form == 7) {
-        console.log("Form 7:", Info);
-
+        // console.log("Form 7:", Info);
         const vacunas = Info.vacunas;
         vacunas.forEach(async (element) => {
           await User.createFormVacunas({
@@ -750,7 +828,9 @@ module.exports = {
 
       const resp = await User.confirmEmail(tokenInfo.user);
 
-      return res.send("Confirmación exitosa: !Muchas gracias por registrarte! Por favor, accede a la aplicación");
+      return res.send(
+        "Confirmación exitosa: !Muchas gracias por registrarte! Por favor, accede a la aplicación"
+      );
 
       return res.status(401).json({
         success: true,
@@ -915,7 +995,7 @@ module.exports = {
       const form = Info.form;
 
       if (form == 1) {
-        console.log("Form Updated", Info);
+        // console.log("Form Updated", Info);
         await User.updatePaciente(Info);
         return res.status(201).json({
           success: true,

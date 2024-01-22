@@ -9,6 +9,8 @@ const AuthController = require("../controllers/authController");
 const QrController = require("../controllers/qrController");
 const passport = require("passport");
 
+const { profileUpload, vaccineUpload } = require('../middlewares/uploadImage');
+
 module.exports = (app, upload, uploadVaccine) => {
   app.get(
     "/api/users/getAll",
@@ -16,12 +18,15 @@ module.exports = (app, upload, uploadVaccine) => {
     UsersController.getAll
   );
 
-  // app.post('/api/users/create2', upload.array('image', 1), UsersController.registerWithImage);
   app.post(
-    "/api/users/registerForm",
+    "/api/person/all",
     passport.authenticate("jwt", { session: false }),
-    UsersController.registerForm
+    UsersController.getAllPersons
   );
+
+  app.post("/api/persona/addimage", profileUpload.single("file"), UsersController.uploadPersonImg );
+
+  app.post( "/api/users/registerForm", passport.authenticate("jwt", { session: false }), UsersController.registerForm );
   app.post(
     "/api/users/getoneuser",
     UsersController.getOneUser

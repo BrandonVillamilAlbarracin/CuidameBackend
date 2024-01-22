@@ -60,7 +60,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/home/developer/uploads/pets/', express.static('/home/developer/uploads/pets/'));
 const staticFolderPath = path.join(__dirname, 'uploads/pets/');
+const staticFolderPathPerson = path.join(__dirname, 'uploads/person/');
 app.use('/uploads/pets/', express.static(staticFolderPath));
+app.use('/uploads/person/', express.static(staticFolderPathPerson));
 
 require("./config/passport")(passport);
 

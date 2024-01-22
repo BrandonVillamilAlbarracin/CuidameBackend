@@ -34,8 +34,7 @@
     "pg-promise": "^11.5.4",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.32.6",
-    "twilio": "^4.18.0",
-    "whatsapp-web.js": "^1.23.0"
+    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8"
   },
   "devDependencies": {
     "dotenv": "^16.3.1"

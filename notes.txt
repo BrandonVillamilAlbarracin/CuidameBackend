@@ -1,3 +1,11 @@
 qrController -> // const client = require('../whats-app/whatsapp');
 usersController -> // const transporter = require('../config/mailer'); Para enviar email se crea un transporter y luego se llama, easy, ready to send emails me lo da el tranposrte
 
+docker build -t app .
+
+
+
+
+An
+
+sudo apt install libnss3 libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libasound2 libasound2-dev libatk-bridge2.0-0 libgtk-3-0
