@@ -373,7 +373,7 @@ User.createForm1 = (user) => {
 
 User.getAllPersons = (id) => {
   const sql = `
-  SELECT c.agreement, p.code, p.nombre, p.photourl
+  SELECT c.agreement, p.code, p.nombre, p.photourl, p.fecha_nacimiento, p.genero
   FROM codes c
   JOIN pacientes p ON c.hashcode = p.code
   WHERE p.a_cargo_id = $1;`;

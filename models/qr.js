@@ -1,9 +1,21 @@
-const db = require('../config/config');
+const db = require("../config/config");
 
 const Qr = {};
 
-Qr.addQrCode = (code,hashcode, license, agreement) => {
-    const sql = `
+Qr.getAgreements = () => {
+  const sql = `
+    select agreement 
+    from codes 
+    where license = 'Health' 
+    AND agreement IS NOT NULL 
+    GROUP BY agreement;
+      `;
+
+  return db.manyOrNone(sql);
+};
+
+Qr.addQrCode = (code, hashcode, license, agreement) => {
+  const sql = `
         INSERT INTO
             codes(
                 code,
@@ -14,11 +26,11 @@ Qr.addQrCode = (code,hashcode, license, agreement) => {
             )
         VALUES($1, $2, $3, $4, $5) RETURNING id
     `;
-    return db.oneOrNone(sql, [code, hashcode, license, agreement, new Date()])
-}
+  return db.oneOrNone(sql, [code, hashcode, license, agreement, new Date()]);
+};
 
 Qr.findPacientByCode = (code) => {
-    const sql = `
+  const sql = `
         SELECT
             nombre,
             code
@@ -27,11 +39,11 @@ Qr.findPacientByCode = (code) => {
         WHERE
             code=$1
     `;
-    return db.oneOrNone(sql, code);
-}
+  return db.oneOrNone(sql, code);
+};
 
 Qr.findMascotaByCode = (hashcode) => {
-    const sql = `
+  const sql = `
         SELECT
             nombre,
             hashcode as "code"
@@ -40,11 +52,11 @@ Qr.findMascotaByCode = (hashcode) => {
         WHERE
             hashcode=$1
     `;
-    return db.oneOrNone(sql, hashcode);
-}
+  return db.oneOrNone(sql, hashcode);
+};
 
 Qr.findByCode = (code) => {
-    const sql = `
+  const sql = `
         SELECT
             id,
             hashcode,
@@ -59,11 +71,11 @@ Qr.findByCode = (code) => {
             hashcode = $1
     `;
 
-    return db.oneOrNone(sql, code);
-}
+  return db.oneOrNone(sql, code);
+};
 
 Qr.findPetByCode = (code) => {
-    const sql = `
+  const sql = `
     SELECT
     m.hashcode,
     users.id,
@@ -78,12 +90,11 @@ JOIN users ON m.id_usuario = users.id
 WHERE 
 m.hashcode = $1`;
 
-    return db.oneOrNone(sql, code);
-}
+  return db.oneOrNone(sql, code);
+};
 
 Qr.findContacts = (idUsuario) => {
-
-    const sql = `
+  const sql = `
     SELECT
             telefono1,
             telefono2,
@@ -93,12 +104,11 @@ Qr.findContacts = (idUsuario) => {
         WHERE
             id_usuario = $1
     `;
-    return db.oneOrNone(sql, idUsuario);
-}
+  return db.oneOrNone(sql, idUsuario);
+};
 
 Qr.findUserContact = (id) => {
-
-    const sql = `
+  const sql = `
     SELECT
             phone
         FROM
@@ -106,8 +116,7 @@ Qr.findUserContact = (id) => {
         WHERE
             id = $1
     `;
-    return db.oneOrNone(sql, id);
-}
-
+  return db.oneOrNone(sql, id);
+};
 
 module.exports = Qr;

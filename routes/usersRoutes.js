@@ -290,4 +290,7 @@ module.exports = (app, upload, uploadVaccine) => {
   app.post("/api/users/townships", UsersController.getTownships);
 
   //app.post('/api/users/upload', upload.single('file'), UsersController.uploadPetImg);
+
+
+  app.get("/api/qr/agreements", QrController.getAgreement);
 };

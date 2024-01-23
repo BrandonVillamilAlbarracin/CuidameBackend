@@ -11,7 +11,23 @@ const accountSid = "AC3af222142270c82efd77831c6772b863";
 const authToken = "fe17acd033e313f5bfe40fa5e593c4ef";
 // const client = require('twilio')(accountSid, authToken);
 
+
+
 module.exports = {
+
+  async getAgreement(req, res, next) {
+    try {
+      const agreements = await QR.getAgreements();
+      return res.status(201).json(agreements);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: "Error al obtener los departamentos.",
+      });
+    }
+  },
+
   async findByCode(req, res, next) {
     try {
       const code_request = req.query.code_request;
