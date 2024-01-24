@@ -59,10 +59,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/home/developer/uploads/pets/', express.static('/home/developer/uploads/pets/'));
+app.use('/home/developer/uploads/person/', express.static('/home/developer/uploads/person/'));
 const staticFolderPath = path.join(__dirname, 'uploads/pets/');
+const staticFolderResourcesPath = path.join(__dirname, 'uploads/resources/');
 const staticFolderPathPerson = path.join(__dirname, 'uploads/person/');
 app.use('/uploads/pets/', express.static(staticFolderPath));
 app.use('/uploads/person/', express.static(staticFolderPathPerson));
+app.use('/uploads/resources/', express.static(staticFolderResourcesPath));
 
 require("./config/passport")(passport);
 
