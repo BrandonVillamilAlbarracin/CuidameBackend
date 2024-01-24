@@ -7,8 +7,6 @@ async function petBandAuth(req, res, next) {
     const agreement = req.body.agreement;
     const myBand = await Auth.findByCode(code);
 
-    // console.log('Code: ' + code, 'Agreement: ' + agreement, 'pin: ' + pin, 'myband: ' + myBand);
-
     if (!myBand) {
       return res.status(401).json({
         success: false,
@@ -62,9 +60,70 @@ async function petBandAuth(req, res, next) {
     });
   }
 }
+async function personBandAuth(req, res, next) {
+  try {
+    const code = req.body.code;
+    const pin = req.body.pin;
+    const agreement = req.body.agreement;
+    const myBand = await Auth.findByCode(code);
+
+    if (!myBand) {
+      return res.status(401).json({
+        success: false,
+        message:
+          "No hemos podido identificar este código, por favor revisa e ingresa nuevamente",
+      });
+    }
+
+    const hasAgreement = await Auth.hasAgreement(code);
+
+    if (!hasAgreement || !hasAgreement.has_agreement) {
+      return res.status(401).json({
+        success: false,
+        message: "Este código no tiene un seguro para tu mascota",
+      });
+    } else if (hasAgreement.agreement !== agreement) {
+      return res.status(401).json({
+        success: false,
+        message: "Este código no coincide con el seguro seleccionado",
+      });
+    }
+
+    const PersonCode = await Auth.findPetBand(code);
+
+    if (PersonCode) {
+      return res.status(401).json({
+        success: false,
+        message: "Este código ya se encuentra en uso",
+      });
+    }
+
+    if (pin == myBand.pin) {
+      return res.status(201).json({
+        success: true,
+        message: "Código autenticado correctamente",
+        data: "",
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Código no es válido",
+        data: {},
+      });
+    }
+  } catch (error) {
+    console.log(`Error: ${error}`);
+    return res.status(501).json({
+      success: false,
+      message: "Error al momento de autenticación",
+      error: error,
+    });
+  }
+}
 
 module.exports = {
   petBandAuth,
+  personBandAuth,
   async getAuth(req, res, nect) {
     try {
       const numeroID = req.query.numeroID;

@@ -141,7 +141,9 @@ module.exports = (app, upload, uploadVaccine) => {
     PetsController.deletePet
   );
   app.post("/api/pets/bandauth", AuthController.petBandAuth);
+  app.post("/api/person/bandauth", AuthController.personBandAuth);
   app.post("/api/pets/gethashcode", PetsController.getHascode);
+  app.post("/api/person/gethashcode", UsersController.getHascode);
   app.post("/api/pets/agreement", PetsController.getAgreement);
 
   app.post(

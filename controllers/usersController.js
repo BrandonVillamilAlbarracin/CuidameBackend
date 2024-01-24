@@ -17,6 +17,21 @@ function compareSync(password, hash) {
   return hash === verifyHash;
 }
 
+async function getHascode(req, res, next) {
+  try {
+    const code = req.body.code;
+    
+    const hashcode = await User.getHashcode(code);
+    return res.status(201).json(hashcode);
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({
+      success: false,
+      message: "Error al obtener el hashcode de la persona.",
+    });
+  }
+}
+
 async function getAllPersons(req, res, next) {
   try {
     const id = req.body.id;
@@ -298,6 +313,7 @@ module.exports = {
   updateUser,
   getAllPersons,
   uploadPersonImg,
+  getHascode,
 
   async forgotPassword(req, res) {
     try {
@@ -568,13 +584,13 @@ module.exports = {
     try {
       const Info = req.body;
       const form = Number(Info.form);
+      console.log('INFO DEL FRONTEND',Info);
 
       if (form == 1) {
         const { hashcode } = await User.getOneQr();
 
         if (Info.code === "" || Info.code == null) Info.code = hashcode;
 
-        // console.log(Info);
 
         if (Info.hashcode == "") {
           return res.status(501).json({

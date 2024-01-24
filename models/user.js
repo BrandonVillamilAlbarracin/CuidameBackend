@@ -97,6 +97,19 @@ User.getAll = () => {
   return db.manyOrNone(sql);
 };
 
+User.getHashcode = (code) => {
+  const sql = `
+    SELECT
+		  hashcode
+    FROM
+        codes
+    WHERE
+        code = $1
+        `;
+
+  return db.oneOrNone(sql, code);
+};
+
 User.getAllDepartments = () => {
   const sql = `
     SELECT

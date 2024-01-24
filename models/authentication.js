@@ -99,6 +99,16 @@ Authentication.findPetBand = (code) => {
   return db.oneOrNone(sql, code);
 };
 
+Authentication.findPersonBand = (code) => {
+  const sql = `
+    SELECT nombre
+    FROM pacientes
+    WHERE code = 
+    (SELECT hashcode FROM codes WHERE code = $1);
+    `;
+  return db.oneOrNone(sql, code);
+};
+
 Authentication.insertMed = (nombres, numeroID) => {
   const sql = `
     INSERT INTO
