@@ -174,7 +174,7 @@ https://maps.google.com/?q=${latitude},${longitude}`
         }
 
         let telefonos = Object.values(contacts);
-        // console.log(telefonos);
+        // console.log('CONTACTOS', telefonos);
 
         for (let i = 0; i < telefonos.length; i++) {
           if (telefonos[i] != null && telefonos[i] != "") {

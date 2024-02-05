@@ -20,9 +20,13 @@ function compareSync(password, hash) {
 async function getHascode(req, res, next) {
   try {
     const code = req.body.code;
-    
-    const hashcode = await User.getHashcode(code);
-    return res.status(201).json(hashcode);
+
+    if (code === "" || code === undefined) {
+      return res.status(201).json({ Hashcode: '' });
+    } else {
+      const hashcode = await User.getHashcode(code);
+      return res.status(201).json(hashcode);
+    }
   } catch (error) {
     console.log(error);
     return res.status(501).json({
@@ -220,7 +224,7 @@ async function uploadPersonImg(req, res) {
     }
 
     if (pacient) {
-      if (file){
+      if (file) {
         if (pacient.photourl !== data.photoUrl) {
           try {
             await fs.unlink(pacient.photourl);
@@ -584,13 +588,12 @@ module.exports = {
     try {
       const Info = req.body;
       const form = Number(Info.form);
-      console.log('INFO DEL FRONTEND',Info);
+      console.log("INFO DEL FRONTEND", Info);
 
       if (form == 1) {
         const { hashcode } = await User.getOneQr();
 
         if (Info.code === "" || Info.code == null) Info.code = hashcode;
-
 
         if (Info.hashcode == "") {
           return res.status(501).json({
@@ -771,7 +774,6 @@ module.exports = {
     try {
       const user = req.body;
       const code = req.body.code;
-      console.log("req", req.body);
       const usuarioExiste = await User.findByEmail(user.email);
 
       if (usuarioExiste) {

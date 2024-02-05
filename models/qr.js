@@ -109,12 +109,14 @@ Qr.findContacts = (idUsuario) => {
 
 Qr.findUserContact = (id) => {
   const sql = `
-    SELECT
-            phone
-        FROM
-            users
-        WHERE
-            id = $1
+  SELECT
+  telefono1,
+  telefono2,
+  telefono3
+FROM
+  contactos
+WHERE
+  id_usuario = $1
     `;
   return db.oneOrNone(sql, id);
 };

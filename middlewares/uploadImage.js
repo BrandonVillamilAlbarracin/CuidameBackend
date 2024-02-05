@@ -24,7 +24,7 @@ const petUpload = configureMulter(petUploadDirectory, petUploadPrefix);
 
 
 // Configuración para la carga de archivos de perfil de mascotas
-const profileUploadDirectory = 'home/developer/uploads/person/profile';
+const profileUploadDirectory = '/home/developer/uploads/person/profile';
 const profileUploadPrefix = 'PER';
 const profileUpload = configureMulter(profileUploadDirectory, profileUploadPrefix);
 
