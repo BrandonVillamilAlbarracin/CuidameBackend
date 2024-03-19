@@ -3,11 +3,13 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 
 const client = new Client({
   puppeteer: {
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  }
- });
- 
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+    ],
+  },
+  authStrategy: new LocalAuth(),
+});
 
 client.on("qr", (qr) => {
   qrcode.generate(qr, { small: true });
@@ -15,6 +17,10 @@ client.on("qr", (qr) => {
 
 client.on("ready", () => {
   console.log("Client is ready!");
+  const number = "+573194843592";
+    const text = "Hey An";
+    const chatId = number.substring(1) + "@c.us";
+    client.sendMessage(chatId, text);
 });
 
 client.on("message", (message) => {

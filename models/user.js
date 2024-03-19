@@ -431,7 +431,7 @@ User.getOneQr = () => {
   const sql = `SELECT c.hashcode
   FROM codes c
   LEFT JOIN pacientes m ON c.hashcode = m.code
-  WHERE m.code IS NULL and c.license = 'Health' and c.agreement IS NULL
+  WHERE m.code IS NULL and c.license = 'Health' and c.agreement IS NULL and c.status = 'inactive'
   LIMIT 1;
   `;
   return db.oneOrNone(sql);

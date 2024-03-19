@@ -23,7 +23,20 @@ module.exports = {
       console.log(`Error: ${error}`);
       return res.status(501).json({
         success: false,
-        message: "Error al obtener los departamentos.",
+        message: "Error al obtener los acuerdos.",
+      });
+    }
+  },
+
+  async getPetAgreement(req, res, next) {
+    try {
+      const agreements = await QR.getPetAgreements();
+      return res.status(201).json(agreements);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: "Error al obtener los acuerdos.",
       });
     }
   },

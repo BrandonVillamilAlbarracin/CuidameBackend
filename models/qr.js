@@ -14,6 +14,18 @@ Qr.getAgreements = () => {
   return db.manyOrNone(sql);
 };
 
+Qr.getPetAgreements = () => {
+  const sql = `
+    select agreement 
+    from codes 
+    where license = 'Pets' 
+    AND agreement IS NOT NULL 
+    GROUP BY agreement;
+      `;
+
+  return db.manyOrNone(sql);
+};
+
 Qr.addQrCode = (code, hashcode, license, agreement) => {
   const sql = `
         INSERT INTO

@@ -1,2 +1,3 @@
-2024/01/17-11:48:08.190 2670 Creating DB C:\Cuidame\CuidameBackend\.wwebjs_auth\session\Default\Platform Notifications since it was missing.
-2024/01/17-11:48:08.199 2670 Reusing MANIFEST C:\Cuidame\CuidameBackend\.wwebjs_auth\session\Default\Platform Notifications/MANIFEST-000001
+2024/03/19-11:09:31.531 1014 Reusing MANIFEST C:\Cuidame\CuidameBackend\.wwebjs_auth\session\Default\Platform Notifications/MANIFEST-000001
+2024/03/19-11:09:31.532 1014 Recovering log #3
+2024/03/19-11:09:31.533 1014 Reusing old log C:\Cuidame\CuidameBackend\.wwebjs_auth\session\Default\Platform Notifications/000003.log 
