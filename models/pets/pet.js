@@ -96,9 +96,10 @@ Pet.addPet = (info) => {
               nochip,
               photoUrl,
               photoName,
+              castrated,
               created_at
           )   
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING id
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING id
       `;
 
   return db.oneOrNone(sql, [
@@ -118,6 +119,7 @@ Pet.addPet = (info) => {
     info.nochip,
     info.photoUrl,
     info.photoName,
+    info.castrated,
     new Date(),
   ]);
 };
@@ -140,7 +142,8 @@ Pet.updatePet = (info) => {
           temperamento = $12,
           nochip = $13,
           photourl = $14,
-          photoname = $15
+          photoname = $15,
+          castrated = $16
       WHERE 
           id = $1
           `;
@@ -161,6 +164,7 @@ Pet.updatePet = (info) => {
     info.nochip,
     info.photourl,
     info.photoname,
+    info.castrated,
     new Date(),
   ]);
 };

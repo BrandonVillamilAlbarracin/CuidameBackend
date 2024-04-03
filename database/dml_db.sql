@@ -351,3 +351,7 @@ ALTER TABLE codes ADD COLUMN status VARCHAR(20) DEFAULT 'inactive';
 UPDATE codes SET status = 'active' WHERE hashcode IN (SELECT hashcode FROM mascotas);
 
 UPDATE codes SET status = 'active' WHERE hashcode IN ('RzRNM0RMVk84SE40MVI2NQ', 'VEIxU0NXTklDM1dSRkVJMw', 'RE1UTkc1SDMwRFlMSE4wVA', 'UTROVkczMERDUTU3QU5DTg', 'TjNPR0I0U0JQSUFOTlNQQg', 'STNFUFNTVUkzWjFIMllNNw');
+
+-- -------------------------------------------------------- 03/04/2024 Castrated column added
+
+ALTER TABLE mascotas ADD COLUMN castrated BOOLEAN;
