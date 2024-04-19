@@ -13,10 +13,18 @@ types.setTypeParser(1114, function (stringValue) {
 const databaseConfig = {
     'host': 'localhost',
     'port': 5432,
-    'database': 'esmarthealth',
-    'user': 'esmarthealth',
-    'password': 'eshp.2022'
+    'database': 'cuidame_db',
+    'user': 'User_brandon',
+    'password': '0000'
 };
+
+// const databaseConfig = {
+//     'host': 'localhost',
+//     'port': 5432,
+//     'database': 'esmarthealth',
+//     'user': 'esmarthealth',
+//     'password': 'eshp.2022'
+// };
 
 // const databaseConfig = {
 //   host: "127.0.0.1",

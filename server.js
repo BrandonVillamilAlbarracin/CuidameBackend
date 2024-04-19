@@ -22,12 +22,11 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());
 
-
-
 /*
  * RUTAS
  */
 const users = require("./routes/usersRoutes");
+const auth = require("./routes/authRoutes");
 // const wp = require('./whats-app/whatsapp');
 
 // if(process.env.NODE_ENV !== 'production')
@@ -75,6 +74,7 @@ app.set("port", port); //Confiturar puerto
 
 //Llamandoa las rutas
 users(app, upload, uploadVaccine);
+auth(app, passport);
 
 // server.listen(3000,'10.14.50.181' || 'localhost', function(){
 server.listen(app.get("port"), function () {

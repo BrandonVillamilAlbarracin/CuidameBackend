@@ -1,4 +1,3 @@
-
 CREATE USER stcolomb_junior WITH PASSWORD 'Espinosa99.';
 
 DROP TABLE IF EXISTS dbPolicia CASCADE;
@@ -77,6 +76,15 @@ CREATE TABLE users(
 	created_at TIMESTAMP(0) NOT NULL,
 	updated_at TIMESTAMP(0) NOT NULL,
 	FOREIGN KEY (code) REFERENCES codes(code) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS microsoft_users CASCADE;
+CREATE TABLE microsoft_users(
+	id BIGSERIAL PRIMARY KEY,
+  microsoft_id VARCHAR(35) NOT NULL UNIQUE,
+	user_id BIGINT NULL,
+  name VARCHAR(100) NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Update users SET verificado = true WHERE id=1;
