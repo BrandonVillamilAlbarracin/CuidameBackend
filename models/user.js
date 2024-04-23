@@ -708,7 +708,11 @@ User.getCardData = (cod) => {
     c.nombre1 AS "Nombre del Contacto",
     c.telefono1 AS "Teléfono del Contacto",
     c_fields.*,
-    (SELECT JSON_ARRAYAGG(a_fields.tipo_alergia) FROM alergias AS a_fields WHERE a_fields.id_paciente = p.id) AS "Tipo de Alergia"
+    (
+        SELECT json_agg(a_fields.tipo_alergia)
+        FROM alergias AS a_fields
+        WHERE a_fields.id_paciente = p.id
+    ) AS "Tipo de Alergia"
 FROM 
     pacientes AS p
 LEFT JOIN
@@ -727,7 +731,7 @@ LEFT JOIN
 INNER JOIN
     contactos AS c ON users.id = c.id_usuario
 WHERE 
-    p.code = $1
+    p.code = $1;
         `;
   return db.manyOrNone(sql, cod);
 
