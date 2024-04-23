@@ -683,6 +683,58 @@ User.updateContact = (info) => {
   ]);
 };
 
+
+User.getCardData = (cod) => {
+  const sql = `
+  SELECT
+    p.a_cargo_id, 
+    p.id, 
+    p.nombre AS "nombre",
+    p.apellido AS "apellido",
+    p.tipoid AS "Tipo de identificación",
+    p.numeroid AS "Número de identificación",
+    p.telefono AS "telefono",
+    p.fecha_nacimiento AS "fechaNacimiento",
+    p.genero AS "genero",
+    p.direccion AS "direccion",
+    p.ciudad,
+    p.departamento,
+    p.rh,
+    p.eps,
+    p.prepagada,
+    p.arl,
+    p.seguro_funerario AS "Seguro funerario",
+    p.photourl,
+    c.nombre1 AS "Nombre del Contacto",
+    c.telefono1 AS "Teléfono del Contacto",
+    c_fields.*,
+    (SELECT JSON_ARRAYAGG(a_fields.tipo_alergia) FROM alergias AS a_fields WHERE a_fields.id_paciente = p.id) AS "Tipo de Alergia"
+FROM 
+    pacientes AS p
+LEFT JOIN
+    (
+        SELECT
+            id_paciente,
+            discapacidad,
+            embarazada,
+            cicatrices_descripcion as Cicatrices,
+            tatuajes_descripcion as Tatuajes
+        FROM
+            condicion
+    ) AS c_fields ON p.id = c_fields.id_paciente
+LEFT JOIN
+    users ON p.a_cargo_id = users.id
+INNER JOIN
+    contactos AS c ON users.id = c.id_usuario
+WHERE 
+    p.code = $1
+        `;
+  return db.manyOrNone(sql, cod);
+
+};
+
+
+
 User.findByCod = (cod) => {
   const sql = `
     SELECT
@@ -706,7 +758,7 @@ User.findByCod = (cod) => {
         parentesco,
         photourl,
         c.nombre1 as "Nombre del Contacto",
-		c.telefono1 as "Teléfono del Contacto"
+                c.telefono1 as "Teléfono del Contacto"
     FROM 
         pacientes
     LEFT JOIN users ON pacientes.a_cargo_id = users.id
@@ -715,24 +767,6 @@ User.findByCod = (cod) => {
         pacientes.code = $1
         `;
   return db.manyOrNone(sql, cod);
-
-  // name as "Nombre del contacto",
-  // parentesco,
-  // phone as "Teléfono del contacto"
-
-  // id,
-  // nombre AS "nombres",
-  // apellido AS "apellidos",
-  // edad,
-  // genero AS Género,
-  // ciudad,
-  // departamento,
-  // direccion,
-  // rh,
-  // eps,
-  // prepagada,
-  // arl,
-  // seguro_funerario AS "Seguro funerario"
 };
 
 User.findContactsById = (id_usuario) => {

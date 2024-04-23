@@ -4,6 +4,7 @@ const wwebVersion = '2.2407.3';
 
 const client = new Client({
   puppeteer: {
+    authStrategy: new LocalAuth(),
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",

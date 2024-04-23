@@ -86,6 +86,23 @@ Qr.findByCode = (code) => {
   return db.oneOrNone(sql, code);
 };
 
+Qr.getByCode = (code) => {
+  const sql = `
+        SELECT
+            a_cargo_id as id,
+            code as hashcode,
+            nombre as name,
+            apellido as lastname,
+            telefono as phone 
+        FROM
+            pacientes
+        WHERE
+            code = $1
+    `;
+
+  return db.oneOrNone(sql, code);
+};
+
 Qr.findPetByCode = (code) => {
   const sql = `
     SELECT
@@ -114,7 +131,21 @@ Qr.findContacts = (idUsuario) => {
         FROM
             public.contactos
         WHERE
-            id_usuario = $1
+        id_usuario = $1
+    `;
+  return db.oneOrNone(sql, idUsuario);
+};
+
+Qr.getContacts = (idUsuario) => {
+  const sql = `
+    SELECT
+            telefono1,
+            telefono2,
+            telefono3
+        FROM
+            public.contactos
+        WHERE
+            a_cargo_id = $1
     `;
   return db.oneOrNone(sql, idUsuario);
 };
