@@ -87,6 +87,24 @@ CREATE TABLE microsoft_users(
 	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+
+DROP TABLE IF EXISTS google_users CASCADE;
+CREATE TABLE google_users(
+	id BIGSERIAL PRIMARY KEY,
+  	google_id VARCHAR(35) NOT NULL UNIQUE,
+	user_id BIGINT NULL,
+  	name VARCHAR(100) NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS facebook_users CASCADE;
+CREATE TABLE facebook_users(
+	id BIGSERIAL PRIMARY KEY,
+  	facebook_id VARCHAR(35) NOT NULL UNIQUE,
+	user_id BIGINT NULL,
+  	name VARCHAR(100) NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
 -- Update users SET verificado = true WHERE id=1;
 
 -- GRANT ALL PRIVILEGES ON TABLE users TO stcolomb_junior-smartek;
