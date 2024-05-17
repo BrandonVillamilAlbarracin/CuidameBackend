@@ -22,7 +22,7 @@ async function getHascode(req, res, next) {
     const code = req.body.code;
 
     if (code === "" || code === undefined) {
-      return res.status(201).json({ Hashcode: '' });
+      return res.status(201).json({ Hashcode: "" });
     } else {
       const hashcode = await User.getHashcode(code);
       return res.status(201).json(hashcode);
@@ -930,6 +930,9 @@ module.exports = {
 
       if (ref == "paciente") {
         var data = await User.findByCod(cod);
+      }
+      if (ref == "card") {
+        var data = await User.getCardData(cod);
       }
       if (ref == "usuario") {
         var data = await User.findByCod(cod);

@@ -295,4 +295,5 @@ module.exports = (app, upload, uploadVaccine) => {
 
 
   app.get("/api/qr/agreements", QrController.getAgreement);
+  app.get("/api/qr/petagreements", QrController.getPetAgreement);
 };

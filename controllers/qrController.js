@@ -11,10 +11,7 @@ const accountSid = "AC3af222142270c82efd77831c6772b863";
 const authToken = "fe17acd033e313f5bfe40fa5e593c4ef";
 // const client = require('twilio')(accountSid, authToken);
 
-
-
 module.exports = {
-
   async getAgreement(req, res, next) {
     try {
       const agreements = await QR.getAgreements();
@@ -23,7 +20,20 @@ module.exports = {
       console.log(`Error: ${error}`);
       return res.status(501).json({
         success: false,
-        message: "Error al obtener los departamentos.",
+        message: "Error al obtener los acuerdos.",
+      });
+    }
+  },
+
+  async getPetAgreement(req, res, next) {
+    try {
+      const agreements = await QR.getPetAgreements();
+      return res.status(201).json(agreements);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      return res.status(501).json({
+        success: false,
+        message: "Error al obtener los acuerdos.",
       });
     }
   },
@@ -72,12 +82,14 @@ module.exports = {
     const longitude = req.query.longitude;
     const objeto = req.query.objeto;
     const mascota = req.query.mascota;
-    const data = await QR.findByCode(code_request);
+    const data =  await QR.getByCode(code_request);
+    
 
     let contacts;
     if (data) {
+      
       contacts = await QR.findContacts(data.id);
-      // console.log("contacts",contacts);
+
       let mensajeEspanol = "";
       let mensajeIngles = "";
       console.log("objeto", objeto);
@@ -194,7 +206,6 @@ https://maps.google.com/?q=${latitude},${longitude}`
           success: true,
           data: data,
         });
-        
       } else {
         return res.status(501).json({
           message: "Hubo un error al enviar alguna notificación",

@@ -1,0 +1,56 @@
+const fs = require('fs');
+// const { Client } = require('whatsapp-web.js');
+// const qrcode = require('qrcode-terminal');
+
+// const SESSION_FILE_PATH = './session.json';
+
+// let sessionData;
+// if(fs.existsSync(SESSION_FILE_PATH)) {
+//     sessionData = require(SESSION_FILE_PATH);
+// }
+
+// const client = new Client({
+//     session: sessionData
+// });
+
+// client.on('authenticated', (session) => {
+//     sessionData = session;
+//     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), (err) => {
+//         if (err) {
+//             console.error(err);
+//         }
+//     });
+// });
+
+// client.on('qr', qr => {
+//     console.log(qr);
+//     qrcode.generate(qr, {small: true});
+// });
+
+// client.on('ready', () => {
+//     console.log('Client is ready!');
+   
+//     const number = "+573194843592";
+//     const text = "Hey An";
+//     const chatId = number.substring(1) + "@c.us";
+//     client.sendMessage(chatId, text);
+//     console.log('Client is ready!')
+// });
+
+// client.on('message', message => {
+//     console.log(message.body);
+// });
+
+// client.initialize();
+
+
+
+            qrcode.toDataURL(qr, (error, url) => {
+                if (error) {
+                    socket.emit(Uatiz.socket.Status_Uaitz, Uatiz.socket.error);
+                }
+                socket.emit('qr', url);
+                socket.emit(Uatiz.socket.Status_Uaitz, Uatiz.socket.qr);
+            });
+        });clear
+        
