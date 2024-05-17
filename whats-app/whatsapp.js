@@ -30,10 +30,6 @@ client.on("message", (message) => {
   }
 });
 
-<<<<<<< HEAD
-// client.initialize();
-=======
 client.initialize();  
->>>>>>> a4b9233f2841fb566e24ee5570fe68711dd73225
 
 module.exports = { client };
