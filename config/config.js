@@ -14,7 +14,7 @@ const databaseConfig = {
     'host': 'localhost',
     'port': 5432,
     'database': 'cuidame_db',
-    'user': 'User_brandon',
+    'user': 'user_brandon',
     'password': '0000'
 };
 

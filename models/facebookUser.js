@@ -1,5 +1,4 @@
 const db = require("../config/config");
-const { saveFacebooktUser } = require("../controllers/loginController");
 
 const FacebookUser = {}
 
@@ -19,4 +18,4 @@ FacebookUser.create = (user) => {
   ]);
 };
 
-module.exports = FacebooktUser
+module.exports = FacebookUser

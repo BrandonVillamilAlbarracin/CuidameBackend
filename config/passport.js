@@ -1,8 +1,9 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 var MicrosoftStrategy = require('passport-microsoft').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
-var FacebookStrategy = require('passport-google-oauth20').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const { log } = require('handlebars');
 const loginController = require('../controllers/loginController');
 const User = require('../models/user');
 const Keys = require('./keys');
@@ -13,6 +14,7 @@ module.exports = function (passport) {
   opts.secretOrKey = Keys.secretOrKey;
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     User.findbyId(jwt_payload.id, (err, user) => {
+      return done(null, {})
       if (err) {
         return done(err, false);
       }
@@ -40,14 +42,25 @@ module.exports = function (passport) {
       done(null, profile);
     })
   );
+
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/google/callback"
-  },
-    async function (accessToken, refreshToken, profile, cb) {
-      await loginController.saveGoogletUser(profile);
-
+  }, async function (accessToken, refreshToken, profile, done) {
+    passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+    passport.deserializeUser(function(user, done) {
+      done(null, user);
+    });
+      return loginController.saveGoogleUser(profile).then((user)=>{
+        return done(null, {id: user.id, name: user.name})
+      }).catch((err)=>{
+        console.log("err: ", err)
+        return done(err, undefined)
+      })
+          
     }
   ));
 
@@ -57,8 +70,8 @@ module.exports = function (passport) {
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
     async function (accessToken, refreshToken, profile, cb) {
-      await loginController.saveFacebooktUser(profile)
-
+      await loginController.saveFacebookUser(profile)
+      done(null, profile);
     }
   ));
 

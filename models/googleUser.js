@@ -2,7 +2,7 @@ const db = require("../config/config");
 
 const GoogleUser = {}
 
-GoogletUser.create = (user) => {
+GoogleUser.create = (user) => {
   const sql = `
     INSERT INTO 
         google_users(
@@ -15,6 +15,16 @@ GoogletUser.create = (user) => {
   return db.oneOrNone(sql, [
     user.code,
     user.name,
+  ]);
+};
+
+GoogleUser.findByGoogleId = (id) => {
+  const sql = `
+    SELECT * FROM
+        google_users WHERE google_id = $1 `;
+
+  return db.oneOrNone(sql, [
+    id
   ]);
 };
 

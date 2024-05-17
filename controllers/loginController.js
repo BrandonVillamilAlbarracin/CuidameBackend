@@ -1,4 +1,7 @@
 const MicrosoftUser = require("../models/microsoftUser");
+const FacebookUser= require("../models/facebookUser");
+const GoogleUser = require("../models/googleUser");
+const { log } = require("handlebars");
 
 module.exports = {
   async saveMicrosoftUser(profile) {
@@ -10,21 +13,25 @@ module.exports = {
     console.log(userId);
   },
 
-  async saveGoogletUser(profile) {
+  async saveGoogleUser(profile) {
     const userId = await GoogleUser.create({
       code: profile.id,
       name: profile.displayName
-    });
-
-    console.log(userId);
+    }).then(id=>id).catch(()=>profile.id);
+    const user = await GoogleUser.findByGoogleId(userId)
+    return user
   },
-  async saveFacebooktUser(profile) {
-    const userId = await FacebookUser.create({
-      code: profile.id,
-      name: profile.displayName
-    });
 
-    console.log(userId);
+  async saveFacebookUser(profile) {
+    try{
+      const userId = await FacebookUser.create({
+        code: profile.id,
+        name: profile.displayName
+      });
+  
+    }catch(err){
+      log(err)
+    }
   }
 }
 
