@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const MicrosoftUser = require("../models/microsoftUser");
-const FacebookUser= require("../models/facebookUser");
+const FacebookUser = require("../models/facebookUser");
 const GoogleUser = require("../models/googleUser");
+const url = require('url');   
 
 module.exports = (app, passport) => {
 
@@ -24,7 +25,22 @@ module.exports = (app, passport) => {
       // [Optional] The token URL. Defaults to `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`
     }),
     function (req, res) {
-      res.json(req.user);
+      const user = req.user
+      // Firmar Token
+      const token = jwt.sign(
+        { id: user.id, name: user.name },
+        keys.secretOrKey,
+        {
+          //    expiresIn: (60*60*24)
+        }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Se ha autenticado correctamente",
+        token: token,
+      });
+      res.redirect("http://localhost:8100/#/initial")
     }
   );
 
@@ -45,14 +61,12 @@ module.exports = (app, passport) => {
           //    expiresIn: (60*60*24)
         }
       );
-      res.status(200).json({
-        success: true,
-        message: "Se ha autenticado correctamente",
-        token: token,
-      });
+
+
+      res.redirect(`http://localhost:8100/#/initial?token=${token}`);
     });
 
-    //Facebook
+  //Facebook
 
   app.get('/auth/facebook',
     passport.authenticate('facebook'));
@@ -61,6 +75,20 @@ module.exports = (app, passport) => {
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     function (req, res) {
       // Successful authentication, redirect home.
-      res.redirect('/');
+      const user = req.user
+      // Firmar Token
+      const token = jwt.sign(
+        { id: user.id, name: user.name },
+        keys.secretOrKey,
+        {
+          //    expiresIn: (60*60*24)
+        }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Se ha autenticado correctamente",
+        token: token,
+      });
     });
 }

@@ -18,4 +18,12 @@ FacebookUser.create = (user) => {
   ]);
 };
 
+FacebookUser.findByID=(id)=>{
+  const sql = `
+    SELECT * FROM facebook_users WHERE facebook_id = $1
+    `;
+
+  return db.oneOrNone(sql, [id]);
+}
+
 module.exports = FacebookUser

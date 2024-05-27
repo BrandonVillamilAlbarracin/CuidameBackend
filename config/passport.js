@@ -27,6 +27,13 @@ module.exports = function (passport) {
     })
   }))
 
+  passport.serializeUser(function (user, done) {
+    done(null, user);
+  });
+  passport.deserializeUser(function (user, done) {
+    done(null, user);
+  });
+
 
   passport.use(
     "microsoft", new MicrosoftStrategy({
@@ -48,20 +55,14 @@ module.exports = function (passport) {
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/google/callback"
   }, async function (accessToken, refreshToken, profile, done) {
-    passport.serializeUser(function(user, done) {
-      done(null, user);
-    });
-    passport.deserializeUser(function(user, done) {
-      done(null, user);
-    });
-      return loginController.saveGoogleUser(profile).then((user)=>{
-        return done(null, {id: user.id, name: user.name})
-      }).catch((err)=>{
-        console.log("err: ", err)
-        return done(err, undefined)
-      })
-          
-    }
+    return loginController.saveGoogleUser(profile).then((user) => {
+      return done(null, { id: user.id, name: user.name })
+    }).catch((err) => {
+      console.log("err: ", err)
+      return done(err, undefined)
+    })
+
+  }
   ));
 
   passport.use(new FacebookStrategy({
@@ -69,7 +70,7 @@ module.exports = function (passport) {
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
-    async function (accessToken, refreshToken, profile, cb) {
+    async function (accessToken, refreshToken, profile, done) {
       await loginController.saveFacebookUser(profile)
       done(null, profile);
     }

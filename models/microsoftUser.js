@@ -18,4 +18,12 @@ MicrosoftUser.create = (user) => {
   ]);
 };
 
+MicrosoftUser.findUserByID = (id) => {
+  const sql = `
+    SELECT * FROM microsoft_users WHERE microsoft_id = $1
+    `;
+
+  return db.oneOrNone(sql, [id]);
+}
+
 module.exports = MicrosoftUser

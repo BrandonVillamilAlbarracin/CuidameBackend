@@ -30,6 +30,6 @@ client.on("message", (message) => {
   }
 });
 
-client.initialize();  
+ //client.initialize();  
 
 module.exports = { client };

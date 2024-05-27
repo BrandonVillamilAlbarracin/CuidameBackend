@@ -1,37 +1,43 @@
 const MicrosoftUser = require("../models/microsoftUser");
-const FacebookUser= require("../models/facebookUser");
+const FacebookUser = require("../models/facebookUser");
 const GoogleUser = require("../models/googleUser");
 const { log } = require("handlebars");
 
 module.exports = {
   async saveMicrosoftUser(profile) {
-    const userId = await MicrosoftUser.create({
-      code: profile.id,
-      name: profile.displayName
-    });
-
-    console.log(userId);
+    try {
+      await MicrosoftUser.create({
+        code: profile.id,
+        name: profile.displayName
+      })
+    } catch (err) {
+      console.log(err)
+    }
+    return await MicrosoftUser.findUserByID(profile.id)
   },
 
   async saveGoogleUser(profile) {
-    const userId = await GoogleUser.create({
-      code: profile.id,
-      name: profile.displayName
-    }).then(id=>id).catch(()=>profile.id);
-    const user = await GoogleUser.findByGoogleId(userId)
-    return user
+    try {
+      await GoogleUser.create({
+        code: profile.id,
+        name: profile.displayName
+      })
+    } catch (err) {
+      console.log(err)
+    }
+    return await GoogleUser.findByGoogleId(profile.id)
   },
 
   async saveFacebookUser(profile) {
-    try{
-      const userId = await FacebookUser.create({
+    try {
+      await FacebookUser.create({
         code: profile.id,
         name: profile.displayName
       });
-  
-    }catch(err){
+    } catch (err) {
       log(err)
     }
+    return FacebookUser.findByID(profile.id)
   }
 }
 
